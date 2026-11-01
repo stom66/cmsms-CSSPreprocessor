@@ -1,43 +1,80 @@
-CSSPreprocessor
-===============
+# cmsms-CSSPreprocessor
 
-A module that extends the stylesheets system of CMS Made Simple with various CSS Preprocessors.
+Maintained fork of the **CSSPreprocessor** module for CMS Made Simple.
 
-Uses the standard Stylesheets / Design manager and caching system. Works with CMSMS 1.11.11 (until 1.3) and 2.1+ series.
+The module extends Design Manager stylesheets with LESS and Sass compilation,
+Smarty processing, minification, source maps and optional autoprefixing.
 
-For the moment, only LESS / SASS preprocessors are provided (PHP and command-line - if available on your server), but you can extend it. Compiles Bootstrap and Foundation.
-Supports SMARTY inside stylesheets and before compilation.
+This repository is a community-maintained fork of CSSPreprocessor for
+[CMS Made Simple](https://www.cmsmadesimple.org) (CMSMS), originally written by
+Aire libre / Mathieu Muths.
 
-## Install
+## Why this fork exists
 
-Clone this repository into the CMS Made Simple `modules` directory:
+The previous releases predate current CMSMS and PHP versions. This fork keeps
+the module usable on current sites and provides one shared source for fixes
+instead of patching each installed copy separately.
+
+## Compatibility
+
+| | |
+|---|---|
+| Current fork release | CSSPreprocessor **3.1** |
+| Tested with | CMS Made Simple 2.2.24, Smarty 4.5.5, **PHP 8.5.12**, AlmaLinux 9 / Apache 2.4 |
+| Minimum CMSMS | 2.2.9 |
+| Requires | No CMSMS module dependencies. The selected command-line compiler must be installed when using a command-line engine. |
+
+## Version number
+
+The fork reports version **3.1**. CMSMS may require a Module Manager upgrade
+after replacing an older copy because this release adds module preferences and
+changes their defaults.
+
+## Installing / updating a site
+
+The repository is called `cmsms-CSSPreprocessor`, but the module folder inside
+a site must be named exactly **`CSSPreprocessor`**.
 
 ```sh
-cd /path/to/cmsms/modules
+# Replace an existing module with the fork.
+cd /path/to/site/modules
+mv CSSPreprocessor CSSPreprocessor.orig
 git clone https://github.com/stom66/cmsms-CSSPreprocessor.git CSSPreprocessor
+
+# Later updates.
+cd /path/to/site/modules/CSSPreprocessor && git pull --ff-only
 ```
 
-Then open Module Manager in CMS Made Simple to install or upgrade the module, and clear the CMS cache.
+Open Module Manager after the initial replacement and whenever the reported
+module version changes. Complete any offered install or upgrade, then clear the
+CMSMS cache. Ensure the web server blocks access to `.git` directories.
 
-## Switch an existing installation to Git
+## Changes in this fork
 
-Back up the current module directory, then clone this repository in its place:
+Version 3.1 adds the following changes to the previous upstream code:
 
-```sh
-cd /path/to/cmsms/modules
-mv CSSPreprocessor CSSPreprocessor.backup-$(date +%Y%m%d)
-git clone https://github.com/stom66/cmsms-CSSPreprocessor.git CSSPreprocessor
-```
+- Added a setting to control automatic front-end stylesheet recompilation for
+  logged-in administrators.
+- Added compiled-output caching when automatic administrator recompilation is
+  disabled.
+- Disabled automatic administrator recompilation by default to avoid
+  production request delays.
+- Loaded the base preprocessor class before the configured compiler so a clean
+  cache can be compiled successfully.
 
-Open Module Manager to complete the upgrade, then clear the CMS cache.
+See [`doc/changelog.html`](doc/changelog.html) for the complete module history.
 
-## Update
+## Contributing
 
-Pull the latest module version:
+- Use one focused change per commit with a conventional commit message.
+- Keep existing stylesheet output unchanged unless the change requires it.
+- Test clean-cache and cached compilation with the supported CMSMS and PHP
+  versions.
+- Update the module version and upgrade path together when a change requires a
+  CMSMS module upgrade.
 
-```sh
-cd /path/to/cmsms/modules/CSSPreprocessor
-git pull --ff-only origin master
-```
+## Licence
 
-If the module version changed, open Module Manager to complete the upgrade. Clear the CMS cache after every update.
+GNU General Public License, version 2 or later. See [`LICENSE`](LICENSE).
+
+Copyright Aire libre / Mathieu Muths and contributors.
