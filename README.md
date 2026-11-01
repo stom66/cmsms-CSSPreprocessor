@@ -14,7 +14,7 @@ Clone this repository into the CMS Made Simple `modules` directory:
 
 ```sh
 cd /path/to/cmsms/modules
-git clone https://github.com/stom66/cmsms-csspreprocessor.git CSSPreprocessor
+git clone https://github.com/stom66/cmsms-CSSPreprocessor.git CSSPreprocessor
 ```
 
 Then open Module Manager in CMS Made Simple to install or upgrade the module, and clear the CMS cache.
@@ -26,7 +26,7 @@ Back up the current module directory, then clone this repository in its place:
 ```sh
 cd /path/to/cmsms/modules
 mv CSSPreprocessor CSSPreprocessor.backup-$(date +%Y%m%d)
-git clone https://github.com/stom66/cmsms-csspreprocessor.git CSSPreprocessor
+git clone https://github.com/stom66/cmsms-CSSPreprocessor.git CSSPreprocessor
 ```
 
 Open Module Manager to complete the upgrade, then clear the CMS cache.
