@@ -19,16 +19,16 @@ instead of patching each installed copy separately.
 
 | | |
 |---|---|
-| Current fork release | CSSPreprocessor **3.1** |
+| Current fork release | CSSPreprocessor **3.1.1** |
 | Tested with | CMS Made Simple 2.2.24, Smarty 4.5.5, **PHP 8.5.12**, AlmaLinux 9 / Apache 2.4 |
 | Minimum CMSMS | 2.2.9 |
 | Requires | No CMSMS module dependencies. The selected command-line compiler must be installed when using a command-line engine. |
 
 ## Version number
 
-The fork reports version **3.1**. CMSMS may require a Module Manager upgrade
-after replacing an older copy because this release adds module preferences and
-changes their defaults.
+The fork reports version **3.1.1**. CMSMS requires a Module Manager upgrade
+after replacing an older copy. Version 3.1 added module preferences and changed
+their defaults.
 
 ## Installing / updating a site
 
@@ -51,7 +51,7 @@ CMSMS cache. Ensure the web server blocks access to `.git` directories.
 
 ## Changes in this fork
 
-Version 3.1 adds the following changes to the previous upstream code:
+The fork adds the following changes to the previous upstream code:
 
 - Added a setting to control automatic front-end stylesheet recompilation for
   logged-in administrators.

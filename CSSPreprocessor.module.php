@@ -36,7 +36,7 @@ class CSSPreprocessor extends CMSModule
         \CMSMS\HookManager::add_hook('Core::PostProcessCSS', [$this, 'RunPreprocessor'] );
 	}
 
-	function GetVersion() { return '3.1'; }
+	function GetVersion() { return '3.1.1'; }
 	function MinimumCMSVersion() { return '2.2.9'; }
 	function GetFriendlyName() { return $this->Lang('friendlyname');}
 	function GetHelp(){ return $this->Lang('help');}
