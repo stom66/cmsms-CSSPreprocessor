@@ -11,6 +11,7 @@ if (isset($params['submit']))
 	$this->SetPreference('import_dirs', $params['import_dirs']);
 	$this->SetPreference('minify', $params['minify']);
 	$this->SetPreference('generate_sourcemap', $params['generate_sourcemap']);
+	$this->SetPreference('recompile_for_admin', $params['recompile_for_admin']);
 	
 	// Autoprefixer
 	$this->SetPreference('use_autoprefixer', $params['use_autoprefixer']);
@@ -72,6 +73,7 @@ $assign['current_preprocessor'] = $this->GetPreference('preprocessor', 'ILess');
 $assign['import_dirs'] = $this->GetPreference('import_dirs', '');
 $assign['minify'] =  $this->GetPreference('minify', 0);
 $assign['generate_sourcemap'] =  $this->GetPreference('generate_sourcemap', 0);
+$assign['recompile_for_admin'] = $this->GetPreference('recompile_for_admin', 0);
 
 // Autoprefixer
 $assign['use_autoprefixer'] =  $this->GetPreference('use_autoprefixer', 0);

@@ -25,4 +25,10 @@ if (version_compare($oldversion, '3.0') < 0)
 }
 
 
+if (version_compare($oldversion, '3.0-beta4') < 0)
+{
+	$this->SetPreference('recompile_for_admin', 0);
+}
+
+
 ?>

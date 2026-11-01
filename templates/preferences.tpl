@@ -74,6 +74,20 @@
 
 		<div class="pageoverflow">
 			<p class="pagetext">
+				<label>{$mod->Lang('recompile_for_admin')}</label>
+			</p>
+			<p class="pageinput">
+				<label for='recompile_for_admin'>
+					<input type="hidden" name='{$actionid}recompile_for_admin' value='0'>
+					<input type="checkbox" name='{$actionid}recompile_for_admin' id='recompile_for_admin' value='1' {if $recompile_for_admin}checked="checked"{/if}>
+
+					{$mod->Lang('recompile_for_admin_label')}
+				</label>
+			</p>
+		</div>
+
+		<div class="pageoverflow">
+			<p class="pagetext">
 				<label>{$mod->Lang('minify')}</label>
 			</p>
 			<p class="pageinput">

@@ -1,6 +1,8 @@
 CSSPreprocessor
 ===============
 
+Chisholme maintains this fork of the abandoned upstream module for its CMS Made Simple installation. Local changes are recorded in `doc/changelog.html`.
+
 A module that extends the stylesheets system of CMS Made Simple with various CSS Preprocessors.
 
 Uses the standard Stylesheets / Design manager and caching system. Works with CMSMS 1.11.11 (until 1.3) and 2.1+ series.

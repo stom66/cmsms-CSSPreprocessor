@@ -36,7 +36,7 @@ class CSSPreprocessor extends CMSModule
         \CMSMS\HookManager::add_hook('Core::PostProcessCSS', [$this, 'RunPreprocessor'] );
 	}
 
-	function GetVersion() { return '3.0-beta3'; }
+	function GetVersion() { return '3.0-beta5'; }
 	function MinimumCMSVersion() { return '2.2.9'; }
 	function GetFriendlyName() { return $this->Lang('friendlyname');}
 	function GetHelp(){ return $this->Lang('help');}
@@ -79,6 +79,7 @@ class CSSPreprocessor extends CMSModule
     {
 		$preprocessor_name = $this->GetPreference('preprocessor', 'LessPHPOyejorge');
 
+		require_once(cms_join_path(__DIR__, 'lib', 'class.Preprocessor.php'));
 		require_once(cms_join_path(__DIR__, 'preprocessors', $preprocessor_name, 'class.Preprocessor_' . $preprocessor_name . '.php'));
 
 		$class_name = 'PreProcessor_' . $preprocessor_name;
@@ -90,20 +91,39 @@ class CSSPreprocessor extends CMSModule
     }
 
 
-
-
-    // Run the preprocessor
-    public function RunPreprocessor($params)
-    {
+	// MARK: RunPreprocessor
+	/**
+	 * Compiles rendered stylesheet content and reuses compiled output when configured.
+	 *
+	 * @param array|string $params Hook parameters or stylesheet content.
+	 * @return string|null Compiled stylesheet content when available.
+	 */
+	public function RunPreprocessor($params)
+	{
 		// Preprocessor load and run
 		if ($preprocessor = $this->GetPreprocessor())
 		{
-            if (is_array($params)) {
-                $cssContent = &$params['content'];
-            } else {
-                $cssContent = &$params;
-            }
-            $preprocessor->CompileCSS($cssContent);
+			if (is_array($params))
+			{
+				$cssContent = &$params['content'];
+			}
+			else
+			{
+				$cssContent = &$params;
+			}
+
+			$cache_file = $this->GetCompilationCacheFile($cssContent);
+			if ($this->ShouldReuseCompilationCache() && is_readable($cache_file))
+			{
+				$cached_content = file_get_contents($cache_file);
+				if ($cached_content !== false)
+				{
+					$cssContent = $cached_content;
+					return $cssContent;
+				}
+			}
+
+			$preprocessor->CompileCSS($cssContent);
 
 			if ( $this->GetPreference('use_autoprefixer', 0) )
 			{
@@ -113,18 +133,66 @@ class CSSPreprocessor extends CMSModule
 			}
 
 			// Minify
-			if ($preprocessor->minify) {
+			if ($preprocessor->minify)
+			{
 				$preprocessor->minifyCSS($cssContent);
-            }
+			}
 
-            // Sourcemap ?
-            if ($preprocessor->generate_sourcemap && $preprocessor->source_map_url)
-            {
-                // And add sourcemap because minify removes comments
-                $cssContent .= "/*# sourceMappingURL=" . $preprocessor->source_map_url . " */";
-            }
+			// Sourcemap ?
+			if ($preprocessor->generate_sourcemap && $preprocessor->source_map_url)
+			{
+				// And add sourcemap because minify removes comments
+				$cssContent .= "/*# sourceMappingURL=" . $preprocessor->source_map_url . " */";
+			}
 
-            return $cssContent;
-        }
-    }
+			$this->WriteCompilationCache($cache_file, $cssContent);
+
+			return $cssContent;
+		}
+	}
+
+
+	// MARK: ShouldReuseCompilationCache
+	private function ShouldReuseCompilationCache()
+	{
+		return get_userid(false) && !$this->GetPreference('recompile_for_admin', 0);
+	}
+
+
+	// MARK: GetCompilationCacheFile
+	private function GetCompilationCacheFile($css_content)
+	{
+		$cache_inputs = array(
+			'content'            => $css_content,
+			'generate_sourcemap' => $this->GetPreference('generate_sourcemap', 0),
+			'import_dirs'        => $this->GetPreference('import_dirs', ''),
+			'minify'             => $this->GetPreference('minify', 0),
+			'preprocessor'       => $this->GetPreference('preprocessor', 'LessPHPOyejorge'),
+			'use_autoprefixer'   => $this->GetPreference('use_autoprefixer', 0),
+		);
+		$cache_key = hash('sha256', serialize($cache_inputs));
+
+		return cms_join_path(TMP_CACHE_LOCATION, 'csspreprocessor_compiled_' . $cache_key . '.css');
+	}
+
+
+	// MARK: WriteCompilationCache
+	private function WriteCompilationCache(
+		$cache_file,
+		$css_content
+	)
+	{
+		$temporary_file = tempnam(TMP_CACHE_LOCATION, 'csspreprocessor_');
+		if ($temporary_file === false)
+		{
+			error_log('CSSPreprocessor: WriteCompilationCache: could not create a temporary cache file');
+			return;
+		}
+
+		if (file_put_contents($temporary_file, $css_content, LOCK_EX) === false || !rename($temporary_file, $cache_file))
+		{
+			@unlink($temporary_file);
+			error_log('CSSPreprocessor: WriteCompilationCache: could not write compiled stylesheet cache');
+		}
+	}
 }

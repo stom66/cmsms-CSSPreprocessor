@@ -40,6 +40,11 @@ $lang['preferences'] = 'Preferences';
 $lang['preferences_set'] = 'Preferences saved';
 
 
+# R
+$lang['recompile_for_admin'] = 'Logged-in administrator recompilation';
+$lang['recompile_for_admin_label'] = 'Recompile stylesheets on every front-end request while an administrator is logged in';
+
+
 
 
 # S
@@ -103,6 +108,9 @@ $lang['help'] = <<<EOT
 <h2>Updating stylesheets</h2>
 <p>
 	If you make an update on a DesignManager or file-based stylesheet (queued with cms_queue_css), the module will process the stylesheet again on the next page refresh.
+</p>
+<p>
+	The module can recompile stylesheets on every front-end request while an administrator is logged in. This is useful while editing imported LESS or SASS files, but should normally be disabled in production. When disabled, compiled output is reused until the stylesheet source, compiler settings, or CMS cache changes.
 </p>
 <p>
 	However, if you did make a change in your imported less files, the system will not perform any update - in this case, you must clear the cache or simply save your designmanager stylesheet to make the {cms_stylesheet} plugin process the css again.
